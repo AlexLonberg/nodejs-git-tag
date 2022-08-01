@@ -39,7 +39,7 @@ type Tag = {
 
 ## Установка из github
 
-    git clone https://github.com/AlexLonberg/js-pkg-tools.git custom_dir_name
+    git clone https://github.com/AlexLonberg/nodejs-git-tag.git custom_dir_name
     cd custom_dir_name
     npm i
     npm run build
