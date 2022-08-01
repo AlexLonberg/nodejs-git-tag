@@ -1,0 +1,22 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/node_modules": true
+  },
+  "search.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "dist": true
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "vsicons.associations.files": [
+    {
+      "icon": "tsconfig",
+      "format": "svg",
+      "filename": true,
+      "extensions": [
+        "tsconfig.dist.json"
+      ]
+    }
+  ]
+}

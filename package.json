@@ -1,0 +1,34 @@
+{
+  "name": "nodejs-git-tag",
+  "version": "0.0.1",
+  "description": "NodeJS Git Tag",
+  "author": "Alexander Lonberg <alexlonberg@gmail.com>",
+  "repository": "https://github.com/AlexLonberg/nodejs-git-tag.git",
+  "homepage": "https://github.com/AlexLonberg/nodejs-git-tag",
+  "keywords": [
+    "git",
+    "node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": "^18.7.0"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.dist.json",
+    "git:describe": "node ./example.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.3",
+    "typescript": "^4.7.4"
+  },
+  "private": true
+}
