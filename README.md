@@ -43,3 +43,5 @@ type Tag = {
     cd custom_dir_name
     npm i
     npm run build
+    // example.js
+    npm run git:describe
