@@ -6,16 +6,18 @@
 ```ts
 // Аннотированный - git describe
 describe(
-  workDir?: null | string, 
-  syncFlag?: null | boolean, 
+  workDir?: null | string,
   args? : null | string[]
-): Promise<Tag> | Tag
+): Promise<Tag>
+describeSync(...): Tag
 
 // Любой - git describe --tags
-describeTags(...)
+describeTags(...): Promise<Tag>
+describeTagsSync(...): Tag
 
 // После фиксации - git describe --contains
-describeContains(...)
+describeContains(...): Promise<Tag>
+describeContainsSync(...): Tag
 
 // Любая из функций возвратит объект:
 type Tag = { 
@@ -33,11 +35,15 @@ type Tag = {
 
 * __workDir__  - Рабочий каталог. Передается в параметры `spawn( x, y, {cwd: workDir})`.
                  По умолчанию `process.cwd()`, иначе вычисляется абсолютный путь.
-* __syncFlag__ - По умолчанию команда запускает асинхронную функцию `child_process.spawn(...)`
-                 и возвращает `Promise<Tag>`. Установка в `true` выполнит `child_process.spawnSync(...) => Tag`.
 * __args__     - Массив дополнительных флагов, будет добавлен в конец `['describe', ...args]`.
 
-## Установка из github
+## Установка
+
+__NPM__
+
+    npm i -D nodejs-git-tag
+
+__GitHub__
 
     git clone https://github.com/AlexLonberg/nodejs-git-tag.git custom_dir_name
     cd custom_dir_name

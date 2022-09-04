@@ -10,7 +10,7 @@ function resolvePath (path?: null | string): string {
 }
 
 /**
- * Возвращается функциями describe(...), describeTags(...) и describeContains(...).
+ * Возвращается функциями describe(...), describeTags(...), describeContains(...) и их синхронными версиями.
  */
 type Tag = { value: string, error: null } | { value: null, error: string }
 
@@ -63,7 +63,7 @@ function execGit (args: string[], workDir?: null | string): Promise<Tag> {
       }
     })
     cp.once('error', (e) => {
-      s(newError(e.stack || e.message || `git ${args.join(' ')}`))
+      s(newError(e?.stack || e?.message || `git ${args.join(' ')}`))
     })
   })
 }
@@ -78,45 +78,78 @@ function execGit (args: string[], workDir?: null | string): Promise<Tag> {
  * 
  * @param  workDir Рабочий каталог. Передается в параметры `spawn( , , {cwd: workDir})`.
  *                 По умолчанию `process.cwd()`, иначе вычисляется абсолютный путь.
- * @param syncFlag По умолчанию команда запускает асинхронную функцию `child_process.spawn(...)` и возвращает `Promise<Tag>`.
- *                 Установка в `true` выполнит `child_process.spawnSync(...) => Tag`.
  * @param     args Массив дополнительных флагов, будет добавлен в конец ['describe', ...args].
  * @returns Возвращается объект с двумя свойствами:
  *            + value:string|null - Если результат команды завершился успешно.
  *            + error:string|null - Результат ошибки в строке.
  */
-function describe (workDir?: null | string, syncFlag?: null | false, args?: null | string[]): Promise<Tag>
-function describe (workDir?: null | string, syncFlag?: true, args?: null | string[]): Tag
-function describe (workDir?: null | string, syncFlag?: null | boolean, args?: null | string[]): Promise<Tag> | Tag {
+function describe (workDir?: null | string, args?: null | string[]): Promise<Tag> {
   const a = args ? ['describe', ...args] : ['describe']
-  return syncFlag ? syncExecGit(a, workDir) : execGit(a, workDir)
+  return execGit(a, workDir)
+}
+
+/**
+ * Возвращает результат команды `git describe` - аннотированный tag.
+ * 
+ * Если тег указывает на фиксацию, отображается только тег,
+ * иначе к имени тега добавляется количество дополнительных коммитов поверх
+ * помеченного объекта и сокращенное имя объекта самого последнего коммита.
+ * Пример v0.2.0-2-g9d351b5.
+ * 
+ * @param  workDir Рабочий каталог. Передается в параметры `spawn( , , {cwd: workDir})`.
+ *                 По умолчанию `process.cwd()`, иначе вычисляется абсолютный путь.
+ * @param     args Массив дополнительных флагов, будет добавлен в конец ['describe', ...args].
+ * @returns Возвращается объект с двумя свойствами:
+ *            + value:string|null - Если результат команды завершился успешно.
+ *            + error:string|null - Результат ошибки в строке.
+ */
+function describeSync (workDir?: null | string, args?: null | string[]): Tag {
+  const a = args ? ['describe', ...args] : ['describe']
+  return syncExecGit(a, workDir)
 }
 
 /**
  * Возвращает результат команды `git describe --tags` - любой тег, найденный в refs/tags.
  * Смотри полное описание describe(...).
  */
-function describeTags (workDir?: null | string, syncFlag?: null | false, args?: null | string[]): Promise<Tag>
-function describeTags (workDir?: null | string, syncFlag?: true, args?: null | string[]): Tag
-function describeTags (workDir?: null | string, syncFlag?: null | boolean, args?: null | string[]): Promise<Tag> | Tag {
+function describeTags (workDir?: null | string, args?: null | string[]): Promise<Tag> {
   const a = args ? ['describe', '--tags', ...args] : ['describe', '--tags']
-  return syncFlag ? syncExecGit(a, workDir) : execGit(a, workDir)
+  return execGit(a, workDir)
+}
+
+/**
+ * Возвращает результат команды `git describe --tags` - любой тег, найденный в refs/tags.
+ * Смотри полное описание describe(...).
+ */
+function describeTagsSync (workDir?: null | string, args?: null | string[]): Tag {
+  const a = args ? ['describe', '--tags', ...args] : ['describe', '--tags']
+  return syncExecGit(a, workDir)
 }
 
 /**
  * Возвращает результат команды `git describe --contains` - тег, который идет после фиксации.
  * Смотри полное описание describe(...).
  */
-function describeContains (workDir?: null | string, syncFlag?: null | false, args?: null | string[]): Promise<Tag>
-function describeContains (workDir?: null | string, syncFlag?: true, args?: null | string[]): Tag
-function describeContains (workDir?: null | string, syncFlag?: null | boolean, args?: null | string[]): Promise<Tag> | Tag {
+function describeContains (workDir?: null | string, args?: null | string[]): Promise<Tag> {
   const a = args ? ['describe', '--contains', ...args] : ['describe', '--contains']
-  return syncFlag ? syncExecGit(a, workDir) : execGit(a, workDir)
+  return execGit(a, workDir)
+}
+
+/**
+ * Возвращает результат команды `git describe --contains` - тег, который идет после фиксации.
+ * Смотри полное описание describe(...).
+ */
+function describeContainsSync (workDir?: null | string, args?: null | string[]): Tag {
+  const a = args ? ['describe', '--contains', ...args] : ['describe', '--contains']
+  return syncExecGit(a, workDir)
 }
 
 export {
   type Tag,
   describe,
   describeTags,
-  describeContains
+  describeContains,
+  describeSync,
+  describeTagsSync,
+  describeContainsSync
 }
